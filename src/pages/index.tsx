@@ -41,20 +41,24 @@ export default function Home(): JSX.Element {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    'images', fetchImages
-
-    // TODO AXIOS REQUEST WITH PARAM
-    ,
-    // TODO GET AND RETURN NEXT PAGE PARAM
-  );
+    'images', fetchImages, {
+    getNextPageParam: lastPage => lastPage?.after || null
+  });
 
   const formattedData = useMemo(() => {
-    // TODO FORMAT AND FLAT DATA ARRAY
+    const formatted = data?.pages.flatMap(imageData => {
+      return imageData.data.flat()
+    })
+    return formatted
   }, [data]);
 
-  // TODO RENDER LOADING SCREEN
+  if (isLoading && !isError) {
+    return <Loading />
+  }
+  if (isLoading && isError) {
+    return <Error />
+  }
 
-  // TODO RENDER ERROR SCREEN
 
   return (
     <>
